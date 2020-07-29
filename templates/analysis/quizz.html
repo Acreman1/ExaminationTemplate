@@ -42,26 +42,15 @@
                     <a  href="../bussiness/index.html">成为机构</a>
                 </h3>
             </li>
-            <li class="nLi login" >
-                <h3 style="min-width: 100px;">
-                    <a href="javascript:void(0);">
-                        登 录
-                    </a>
-                </h3>
-                <ul class="sub" style="overflow: hidden; display: none;">
-                  {% if request.session.uid %}
-                      <li><a href="/logout">注销</a></li>
-                      <li id="resetPassword"><a href="#">修改密码</a></li>
-                  {% else %}
-                      <li><a id="signInNormal" href="#">密码登录</a></li>
-                  {% endif %}
-                </ul>
+            <li class="nLi login" id='login1'>
+                
             </li>
         </ul>
         <!--end nav_menu -->
         </div>
     </div>
   <div class="modal" id="signInModalNormal" tabindex="-1" role="dialog" aria-labelledby="signInModalNormalLabel">
+      <form id="emailLogin">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -71,17 +60,16 @@
       <div class="modal-body">
         <form>
             <div class="form-group">
-                <label for="signInId" >邮箱</label>
-                <input type="text" class="form-control" id="signInId" placeholder="hugo.zhang@example.com">
+                <label for="signInId" >账号</label>
+                <input type="text" class="form-control" id="signInId" placeholder="" name='username'>
             </div>
             <div class="form-group">
                 <label for="signInPassword" >密码</label>
-                <input type="password" class="form-control" id="signInPassword" placeholder="#p@ssw0d123">
+                <input type="password" class="form-control" id="signInPassword" placeholder="" name='password'>
             </div>
             <div class="form-group">
                 <label for="signInVcode" >验证码</label>
-                <input type="text" class="form-control" id="signInVcode" placeholder="">
-                <img id="signInVcodeImg" src="" style="height: 50px;width: 150px;" />
+                
             </div>
         </form>
       </div>
@@ -92,6 +80,7 @@
       </div>
     </div>
   </div>
+  </form>
   </div>
 
   <div class="modal" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel">
@@ -202,13 +191,61 @@
   </div>
   <script type="text/javascript">
     $(function(){
-        $(".login").mouseover(function(){
-                $(".sub").show();
-            }).mouseout(function(){
-                $(".sub").hide();
+        var jwt = document.cookie.match('jwt=([^;]*)(;|$)')
+        var user = document.cookie.match('user=([^;]*)(;|$)')
+        console.log(jwt)
+        if (jwt){
+            if (jwt[1] != 0){
+                $('#login1').append('<h3 style="min-width: 100px;"><a id="logout" title="点击退出">'+user[1]+'</a></h3>')
+                $('#logout').click(function(){
+                    document.cookie = 'jwt=0'
+                    document.cookie = 'user=0'
+                    location.reload()
             })
-        })
-</script>
+            }else{
+                $('#login1').append('<h3 style="min-width: 100px;"><a id="log">登 录</a></h3>')
+                $('#log').click(function(){
+                    $('#signInModalNormal').modal('show');
+                    $('#signInPost').click(function(){
+                        $.ajax({
+                            type:'post',
+                            url:'http://127.0.0.1:8000/login/',
+                            dataType:'json',
+                            data:$('#emailLogin').serialize(),
+                            success:function(data){
+                            var exp = new Date();
+                            exp.setTime(exp.getTime() + 60 * 2000);//过期时间 2分钟
+                            document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString();
+                            document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString();
+                            location.reload()
+                        }
+                        })
+                    })
+                })
+            }
+        }else{
+            $('#login1').append('<h3 style="min-width: 100px;"><a id="log">登 录</a></h3>')
+            $('#log').click(function(){
+                $('#signInModalNormal').modal('show');
+                $('#signInPost').click(function(){
+                    $.ajax({
+                        type:'post',
+                        url:'http://127.0.0.1:8000/login/',
+                        dataType:'json',
+                        data:$('#emailLogin').serialize(),
+                        success:function(data){
+                            var exp = new Date();
+                            exp.setTime(exp.getTime() + 60 * 2000);//过期时间 2分钟
+                            document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString();
+                            document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString();
+                            location.reload()
+                        }
+                    })
+                })
+            })
+        }
+    })
+    </script>
     <script>
       $.ajaxSetup({
           data: {csrfmiddlewaretoken: '{{ csrf_token }}' }
