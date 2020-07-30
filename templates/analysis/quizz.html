@@ -42,7 +42,10 @@
                     <a  href="../bussiness/index.html">成为机构</a>
                 </h3>
             </li>
-            <li class="nLi login" id='login1'>
+            <li class="nLi" id='login1'>
+                
+            </li>
+            <li class="nLi login" id='logout1'>
                 
             </li>
         </ul>
@@ -193,17 +196,17 @@
     $(function(){
         var jwt = document.cookie.match('jwt=([^;]*)(;|$)')
         var user = document.cookie.match('user=([^;]*)(;|$)')
-        console.log(jwt)
-        if (jwt){
+        if (jwt){   
             if (jwt[1] != 0){
-                $('#login1').append('<h3 style="min-width: 100px;"><a id="logout" title="点击退出">'+user[1]+'</a></h3>')
+                $('#login1').append('<h3><a href="#" title="用户信息">'+user[1]+'</a></h3>')
+                $('#logout1').append('<h3><a id="logout" title="点击退出">注销</a></h3>')
                 $('#logout').click(function(){
-                    document.cookie = 'jwt=0'
-                    document.cookie = 'user=0'
+                    document.cookie = 'jwt=0' + ";expires=-1;path=/";
+                    document.cookie = 'user=0' + ";expires=-1;path=/";
                     location.reload()
-            })
+                })
             }else{
-                $('#login1').append('<h3 style="min-width: 100px;"><a id="log">登 录</a></h3>')
+                $('#login1').append('<h3><a id="log">登 录</a></h3>')
                 $('#log').click(function(){
                     $('#signInModalNormal').modal('show');
                     $('#signInPost').click(function(){
@@ -213,18 +216,19 @@
                             dataType:'json',
                             data:$('#emailLogin').serialize(),
                             success:function(data){
-                            var exp = new Date();
-                            exp.setTime(exp.getTime() + 60 * 2000);//过期时间 2分钟
-                            document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString();
-                            document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString();
-                            location.reload()
-                        }
+                                console.log(data)
+                                var exp = new Date();
+                                exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
+                                document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                location.reload()
+                            }
                         })
                     })
                 })
             }
         }else{
-            $('#login1').append('<h3 style="min-width: 100px;"><a id="log">登 录</a></h3>')
+            $('#login1').append('<h3><a id="log">登 录</a></h3>')
             $('#log').click(function(){
                 $('#signInModalNormal').modal('show');
                 $('#signInPost').click(function(){
@@ -234,16 +238,25 @@
                         dataType:'json',
                         data:$('#emailLogin').serialize(),
                         success:function(data){
+                            console.log(data)
                             var exp = new Date();
-                            exp.setTime(exp.getTime() + 60 * 2000);//过期时间 2分钟
-                            document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString();
-                            document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString();
+                            exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
+                            document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
+                            document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
                             location.reload()
                         }
                     })
                 })
             })
         }
+        $('#signUp').click(function(){
+            $('#signUpModal').modal('show');
+            $('#signInModalNormal').modal('hide');
+        })
+        $('#resetPassword').click(function(){
+            $('#resetPasswordModal').modal('show');
+            $('#signInModalNormal').modal('hide');
+        })
     })
     </script>
     <script>
