@@ -176,13 +176,12 @@
                     <h1 id='message_name'></h1>
                     <div class="wid775 div-course">
                         <h2 class="test-mb40">
-                            <span id="username">乌拉</span>
+                            <span id="username"></span>
                             同学：你好！
                         </h2>
                         <ul class="ul-report" style="padding-left:0">
                             <li class="list-group-item">出题机构：<span id='message_user'></span></li>
                             <li class="list-group-item">题目类别：<span id='message_type'></span></li>
-                            <li class="list-group-item">题目数量：10</li>
                             <li class="list-group-item">题库大小：<span id='message_len'></span> 道题</li>
                             <li class="list-group-item">考试时长：<span id='max_time'></span>分钟</li>
                         </ul>
@@ -670,7 +669,7 @@ $(function(){
     num = 1
     if (num){
         $.get('http://127.0.0.1:8000/message/'+ num +'/' , function(dic){
-            var user = $.cookie('username')
+            var user = $.cookie('user')
             if(user == undefined){
                 // window.location.href='http://127.0.0.1:5500/templates/web/'
                 user = '游客'

@@ -807,7 +807,10 @@ $(function(){
   <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script>
     $(function(){
+        if($.cookie('jwt')){
+        console.log($.cookie('jwt'))
         var hr = window.location.href
+        var grade = 0
         num = hr.split('=')[1]
         if (num){
             $.get('http://127.0.0.1:8000/message/'+ num +'/' , function(dic){
@@ -827,7 +830,28 @@ $(function(){
                     if (max_time<=0){
                         $.removeCookie(dic.id+'')
                         alert('考试时间到了')
-                        // clearInterval()
+                        clearInterval(It)
+                        $.ajax({
+                        url:'http://127.0.0.1:8000/score/',
+                        type:'POST',
+                        data:{
+                            "message":dic.id,
+                            "grade": grade,
+                            'an_user':2,
+                            // an_user':cookie('id')
+                        },
+                        success:function(){
+                            $.removeCookie(dic.id+'')
+                            clearInterval(It)
+                            alert('提交完成')
+                            window.location.href='http://127.0.0.1:5500/templates/competition/rank.html?grade='+grade
+                        },
+                        error:function(err){
+                            console.log(err)
+                        }
+
+                    })
+                    return
                     }
                 }, 1000)
                 var i = 0
@@ -982,7 +1006,7 @@ $(function(){
                     }
                 })
                 $('#answerSubmit').click(function(){
-                    var grade = 0
+                    
                 var v = $("input[name='value']:checked").val()
                     if (dic.message_key[i].types == '填空'){
                         v =  $("input[name='value']").val()
@@ -1004,13 +1028,15 @@ $(function(){
                         data:{
                             "message":dic.id,
                             "grade": grade,
-                            'an_user':2,
+                            "an_user":2,
+                            "jwt":$.cookie('jwt')
                             // an_user':cookie('id')
                         },
                         success:function(){
                             $.removeCookie(dic.id+'')
                             clearInterval(It)
                             alert('提交完成')
+                            window.location.href='http://127.0.0.1:5500/templates/competition/rank.html?grade='+grade
                         },
                         error:function(err){
                            
@@ -1023,6 +1049,9 @@ $(function(){
             })
             
         }
+        else{
+            window.location.href='http://127.0.0.1:5500/templates/web/'
+        }}
         else{
             window.location.href='http://127.0.0.1:5500/templates/web/'
         }
