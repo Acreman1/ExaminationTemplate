@@ -18,6 +18,29 @@
             padding-top : 200px;
         }
     </style>
+    <style>  
+        .yz{
+            width: 60%;
+            height: 50px;
+            line-height: 50px;
+            display: inline-table;
+        }
+        .yz_code{
+            float: left;
+            width: 140px;
+            text-align: center;
+            height: 100%;
+            border: 1px solid #000;
+            margin-right: 20px;
+        }
+        button{
+            margin-top: 24px;
+            font-size: 16px;
+            border: none;
+            background: transparent;
+            border-bottom: 1px solid blue;
+        }
+    </style>
   </head>
   <body>
   <div class="main-container">
@@ -41,7 +64,10 @@
                     <a  href="../bussiness/index.html">成为机构</a>
                 </h3>
             </li>
-            <li class="nLi login" id='login1'>
+            <li class="nLi" id='login1'>
+                
+            </li>
+            <li class="nLi login" id='logout1'>
                 
             </li>
         </ul>
@@ -67,12 +93,17 @@
                 <input type="password" class="form-control" id="signInPassword" placeholder="" name='password'>
             </div>
             <div class="form-group">
-                <label for="signInVcode" >验证码</label>
-                
+                <label for="signInVcode" >验证码</label><br>
+                <input type="text" class="form-control" id="signUpVcode" style="width: 150px;display: inline-block;" placeholder="">
+                <div class="yz">
+                    <div class="yz_code"></div>
+                    <b class="btn"></b>
+                </div>
             </div>
         </form>
       </div>
       <div class="modal-footer">
+        <a href="http://127.0.0.1:8000/login/weibo/">微博登录 </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a href="#" id="resetPassword" style="margin-right: 10px;" >忘记密码？</a>
           <a href="#" id="signUp" style="margin-right: 30px;" >注册</a>
           <button type="button" class="btn btn-primary" id="signInPost">登录</button>
@@ -631,58 +662,98 @@
     $(function(){
         var jwt = document.cookie.match('jwt=([^;]*)(;|$)')
         var user = document.cookie.match('user=([^;]*)(;|$)')
-        console.log(jwt)
-        if (jwt){
+    
+        var type1 = false;
+            function rnd(start,end){
+                    return Math.floor(Math.random()*(end-start+1))+start;
+                }
+    
+                var str ="0123456789abcdefghijklmnopqrstuvwxyz";
+                // 生成6位数字验证码
+                function code(){
+                    var arr = [];
+                    for(var i = 0;i<6;i++){
+                        arr[i] = str.charAt(rnd(0,str.length-1));
+                    }
+                    // 将数组转化为字符串
+                    res = arr.join("")
+                    $('.yz_code').html(res);
+                }
+            // 首次进入时展示的验证码
+                code();
+                $('.yz_code').click(function() {
+                    code();
+                    
+                });
+         
+        if (jwt){   
             if (jwt[1] != 0){
-                $('#login1').append('<h3 style="min-width: 100px;"><a id="logout" title="点击退出">'+user[1]+'</a></h3>')
+                $('#login1').append('<h3><a href="#" title="用户信息">'+user[1]+'</a></h3>')
+                $('#logout1').append('<h3><a id="logout" title="点击退出">注销</a></h3>')
                 $('#logout').click(function(){
-                    document.cookie = 'jwt=0'
-                    document.cookie = 'user=0'
+                    document.cookie = 'jwt=0' + ";expires=-1;path=/";
+                    document.cookie = 'user=0' + ";expires=-1;path=/";
                     location.reload()
-            })
+                })
             }else{
-                $('#login1').append('<h3 style="min-width: 100px;"><a id="log">登 录</a></h3>')
+                $('#login1').append('<h3><a id="log">登 录</a></h3>')
                 $('#log').click(function(){
                     $('#signInModalNormal').modal('show');
                     $('#signInPost').click(function(){
+                        if ($('#signUpVcode').val() == res){
+                            $.ajax({
+                                type:'post',
+                                url:'http://127.0.0.1:8000/login/',
+                                dataType:'json',
+                                data:$('#emailLogin').serialize(),
+                                success:function(data){
+                                    console.log(data)
+                                    var exp = new Date();
+                                    exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
+                                    document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                    document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                    location.reload()
+                                }
+                            })
+                        }
+                    })
+                })
+            }
+        }else{
+            $('#login1').append('<h3><a id="log">登 录</a></h3>')
+            $('#log').click(function(){
+                $('#signInModalNormal').modal('show');
+                $('#signInPost').click(function(){
+                    if ($('#signUpVcode').val() == res){
                         $.ajax({
                             type:'post',
                             url:'http://127.0.0.1:8000/login/',
                             dataType:'json',
                             data:$('#emailLogin').serialize(),
                             success:function(data){
-                            var exp = new Date();
-                            exp.setTime(exp.getTime() + 60 * 2000);//过期时间 2分钟
-                            document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString();
-                            document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString();
-                            location.reload()
-                        }
+                                console.log(data)
+                                var exp = new Date();
+                                exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
+                                document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                location.reload()
+                            }
                         })
-                    })
-                })
-            }
-        }else{
-            $('#login1').append('<h3 style="min-width: 100px;"><a id="log">登 录</a></h3>')
-            $('#log').click(function(){
-                $('#signInModalNormal').modal('show');
-                $('#signInPost').click(function(){
-                    $.ajax({
-                        type:'post',
-                        url:'http://127.0.0.1:8000/login/',
-                        dataType:'json',
-                        data:$('#emailLogin').serialize(),
-                        success:function(data){
-                            var exp = new Date();
-                            exp.setTime(exp.getTime() + 60 * 2000);//过期时间 2分钟
-                            document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString();
-                            document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString();
-                            location.reload()
-                        }
-                    })
+                    }
                 })
             })
         }
+        $('#signUp').click(function(){
+            $('#signUpModal').modal('show');
+            $('#signInModalNormal').modal('hide');
+        })
+        $('#resetPassword').click(function(){
+            $('#resetPasswordModal').modal('show');
+            $('#signInModalNormal').modal('hide');
+        })
     })
+    
+    
     </script>
     <script>
       $.ajaxSetup({
