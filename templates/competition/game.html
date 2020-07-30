@@ -179,49 +179,22 @@
         <div class="position toInWhere">
             <b>当前位置：</b><span>
                 <a onclick="history.back(-1)">比赛信息</a>
-            </span>&nbsp;&gt;&nbsp;<span>{{ kind_name }}</span>
+            </span>&nbsp;&gt;&nbsp;<span class='title'></span>
         </div>
         <div class="inner-content">
             <div class="border teston mb-15 zycs_ceshi" style="display: block;">
                     <div class="teston-top">
                         <img src="/static/images/teston-top.jpg">
-                        <h1>{{ kind_name }}</h1>
+                        <h1 class=title></h1>
                         <div class="process">
-                            <span class="n2">倒计时：</span>
-                            <span class="n2" style="color:#e4653d" id="timetext">{% if period_time %}{{ period_time }}分00秒{% else %}无限制{% endif %}</span>
+                            <span class="n2">倒计时：<span id='max_time'></span>秒</span>
+                            <span class="n2" style="color:#e4653d" id="timetext"></span>
                         </div>
                     </div>
-            <p class="lead" style="color: #337ab7;">
-                Q:&nbsp;&nbsp;<label id="question"></label>
+            <p class="lead" style="color: #337ab7;" id='message_title'>
+                &nbsp;&nbsp;<label id="question"></label>
             </p>
             <div id="choiceBox" class="checkbox" style="border: #31b0d5;padding-left:40%;font-size:18px;">
-                <div class="radio">
-                    <label id="item1Answer">
-                        <input type="radio" name="itemRadios" id="itemRadio1" value="item1">
-                        <label id="item1" for="itemRadio1"></label>
-                    </label>
-                </div>
-                <br />
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="itemRadios" id="itemRadio2" value="item2">
-                        <label id="item2" for="itemRadio2"></label>
-                    </label>
-                </div>
-                <br />
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="itemRadios" id="itemRadio3" value="item3">
-                        <label id="item3" for="itemRadio3"></label>
-                    </label>
-                </div>
-                <br />
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="itemRadios" id="itemRadio4" value="item4">
-                        <label id="item4" for="itemRadio4"></label>
-                    </label>
-                </div>
                 <div class="hidden">
                     <label>
                         <input type="radio" name="itemRadios" id="itemRadioPk" value="pk">
@@ -229,14 +202,11 @@
                     </label>
                 </div>
             </div>
-            <div id="fullinBox" class="form-inline" style="text-align:center">
-                <input type="text" class="form-control" id="answerF" placeholder="请输入答案"  style="width:400px" />
-                <input type="hidden" id="answerPk" />
-            </div>
+            
             <div style="margin-top: 80px;text-align:center">
                 <div id="preQuestion" class="btn btn-primary">后退</div>
                 <div id="nextQuestion" class="btn btn-primary" style="margin-left: 110px;">前进</div>
-                <input class="btn btn-danger" type="submit" style="margin-left: 110px;" id="answerSubmit" value="交卷" />
+                <button class="btn btn-danger" type="button" style="margin-left: 110px;" id="answerSubmit" value="交卷" >交卷</button>
             </div>
             </div>
         </div>
@@ -797,6 +767,230 @@
       })
   </script>
   </body>
+  <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+    $(function(){
+        var hr = window.location.href
+        num = hr.split('=')[1]
+        if (num){
+            $.get('http://127.0.0.1:8000/message/'+ num +'/' , function(dic){
+                $('.title').html(dic.title)
+                var cookie_time = $.cookie(dic.id+'')
+                if (cookie_time){
+                    max_time = cookie_time
+                }else{
+                    var max_time = dic.max_time*60
+                }
+                // max_time = dic.max_time*60
+                
+                It = setInterval(function(){
+                    max_time-=1
+                    $('#max_time').html(max_time)
+                    $.cookie(dic.id, max_time, { expires: 7 });
+                    if (max_time<=0){
+                        $.removeCookie(dic.id+'')
+                        alert('考试时间到了')
+                        // clearInterval()
+                    }
+                }, 1000)
+                var i = 0
+                var dic_list = new Array();
+                $('#message_title').html(
+                    
+                    dic.message_key[i].title+'('+ dic.message_key[i].types +')')
+                    console.log(dic.message_key[i].types)
+                    if (dic.message_key[i].types == '判断'){
+                        $('#choiceBox').html(
+                            '<div class="radio">'+
+                        '<label id="item1Answer">'+
+                        '√<input type="radio" name="value" id="" value="1">'+
+                        '<label id="item1" for="itemRadio1"></label>'+
+                        '</label>'+
+                        '</div>'+
+                        '<div class="radio">'+
+                        '<label id="item1Answer">'+
+                        '×<input type="radio" name="value" id="" value="0">'+
+                        '<label id="item1" for="itemRadio1"></label>'+
+                        '</label>'+
+                        '</div>'
+                        )
+                    }
+                    if (dic.message_key[i].types == '填空'){
+                        $('#choiceBox').html(
+                        '<div id="fullinBox" class="form-inline" style="text-align:center">'+
+                        '<input type="text" class="form-control" id="value" placeholder="请输入答案"  style="width:400px" />'+
+                        '<input type="hidden" id="answerPk" />'+
+                        '</div>')
+                    }
+                    if (dic.message_key[i].types == '选择'){
+                        // 选项
+                        list_a = dic.message_key[i].options.split(',')
+                        window.str = ''
+                        
+                        for(var f=0;  f<list_a.length; f++){
+                            var option = list_a[f]
+                            console.log(option)
+                            window.str += '<div class="radio">'+
+                            '<label id="item1Answer"><input type="radio" name="value" id="" value="'+ list_a[f].split(':')[0] +'">'+list_a[f]+
+                            '<label id="item1" for="itemRadio1"></label>'+
+                            '</label>'+
+                            '</div>'      
+                        }
+                        console.log(window.str)
+                        $('#choiceBox').html(window.str)
+                    }
+                $('#nextQuestion').click(function(){
+                    var v = $("input[name='value']:checked").val()
+                    if (dic.message_key[i].types == '填空'){
+                        v =  $("input[name='value']").val()
+                    }
+                    dic_list[dic.message_key[i].id+''] = v
+                    console.log(dic_list['2'])
+                    i+=1
+                    if (i>dic.message_key.length-1){
+                        alert('这是最后一题啦')
+                        i-=1
+                    }
+                    $('#message_title').html(
+                    dic.message_key[i].title+'('+ dic.message_key[i].types +')')
+                    if (dic.message_key[i].types == '判断'){
+                        
+                        $('#choiceBox').html(
+                        '<div class="radio">'+
+                        '<label id="item1Answer">'+
+                        '√<input type="radio" name="value" id="" value="1">'+
+                        '<label id="item1" for="itemRadio1"></label>'+
+                        '</label>'+
+                        '</div>'+
+                        '<div class="radio">'+
+                        '<label id="item1Answer">'+
+                        '×<input type="radio" name="value" id="" value="0">'+
+                        '<label id="item1" for="itemRadio1"></label>'+
+                        '</label>'+
+                        '</div>'
+                        )
+                    }
+                    if (dic.message_key[i].types == '填空'){
+                        $('#choiceBox').html(
+                        '<div id="fullinBox" class="form-inline" style="text-align:center">'+
+                        '<input type="text" class="form-control" id="answerF" name="value" placeholder="请输入答案"  style="width:400px" />'+
+                        '</div>')
+                                 }
+                    if (dic.message_key[i].types == '选择'){
+                        // 选项
+                        list_a = dic.message_key[i].options.split(',')
+                        window.str = ''
+                        
+                        for(var f=0;  f<list_a.length; f++){
+                            var option = list_a[f]
+                            console.log(option)
+                            window.str += '<div class="radio">'+
+                            '<label id="item1Answer"><input type="radio" name="value" id="" value="'+ list_a[f].split(':')[0] +'">'+list_a[f]+
+                            '</label>'+
+                            '</div>'      
+                        }
+                        console.log(window.str)
+                        $('#choiceBox').html(window.str)
+                    }
+                
+                })
+                
+                $('#preQuestion').click(function(){
+                    i-=1
+                    if (i<0){
+                        alert('这是第一题啦')
+                        i+=1
+                    }
+                    $('#message_title').html(dic.message_key[i].title+'('+ dic.message_key[i].types +')')
+                    console.log(dic.message_key[i].types)
+                    if (dic.message_key[i].types == '判断'){
+                        $('#choiceBox').html(
+                        '<div class="radio">'+
+                        '<label id="item1Answer">'+
+                        '√<input type="radio" name="value" id="" value="1">'+
+                        '<label id="item1" for="itemRadio1"></label>'+
+                        '</label>'+
+                        '</div>'+
+                        '<div class="radio">'+
+                        '<label id="item1Answer">'+
+                        '×<input type="radio" name="value" id="" value="0">'+
+                        '<label id="item1" for="itemRadio1"></label>'+
+                        '</label>'+
+                        '</div>'
+                        )
+                    }
+                    if (dic.message_key[i].types == '填空'){
+                        $('#choiceBox').html(
+                            
+                        '<div id="fullinBox" class="form-inline" style="text-align:center">'+
+                        '<input type="text" class="form-control" name="value" placeholder="请输入答案"  style="width:400px" />'+
+                        '<input type="hidden" id="answerPk" />'+
+                        '</div>')
+                    }
+                    if (dic.message_key[i].types == '选择'){
+                        // 选项
+                        list_a = dic.message_key[i].options.split(',')
+                        window.str = ''
+                        
+                        for(var f=0;  f<list_a.length; f++){
+                            var option = list_a[f]
+                            console.log(option)
+                            window.str += '<div class="radio">'+
+                            '<label id="item1Answer"><input type="radio" name="value" id="" value="'+ list_a[f].split(':')[0] +'">'+list_a[f]+
+                            '</label>'+
+                            '</div>'      
+                        }
+                        console.log(window.str)
+                        $('#choiceBox').html(window.str)
+                    }
+                })
+                $('#answerSubmit').click(function(){
+                    var grade = 0
+                var v = $("input[name='value']:checked").val()
+                    if (dic.message_key[i].types == '填空'){
+                        v =  $("input[name='value']").val()
+                    }
+                    dic_list[dic.message_key[i].id+''] = v
+                    for (key in dic_list){
+                        for(var m=0;m<dic_list.length-1;m++){
+                            if (dic.message_key[m].id+'' == key){
+                                if(dic.message_key[m].answer == dic_list[key]){
+                                    grade+=dic.message_key[m].grade
+                                }
+                            }
+                        } 
+                    }
+                    console.log(grade)  
+                    $.ajax({
+                        url:'http://127.0.0.1:8000/score/',
+                        type:'POST',
+                        data:{
+                            "message":dic.id,
+                            "grade": grade,
+                            'an_user':2,
+                            // an_user':cookie('id')
+                        },
+                        success:function(){
+                            $.removeCookie(dic.id+'')
+                            clearInterval(It)
+                            alert('提交完成')
+                        },
+                        error:function(err){
+                           
+                            console.log(err)
+                        }
+
+                    })
+            })
+               
+            })
+            
+        }
+        else{
+            window.location.href='http://127.0.0.1:5500/templates/web/'
+        }
+    })
+</script>
 </html>
 
 
