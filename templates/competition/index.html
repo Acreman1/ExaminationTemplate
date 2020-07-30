@@ -176,23 +176,22 @@
         <div class="inner-content">
             <div class="xxdj-report border zycs_text">
                 <div class="course-report">
-                    <h1>{{kind_info.kind_name}}</h1>
+                    <h1 id='message_name'></h1>
                     <div class="wid775 div-course">
                         <h2 class="test-mb40">
-                            <span id="username">{{ request.session.username }}</span>
+                            <span id="username">乌拉</span>
                             同学：你好！
                         </h2>
                         <ul class="ul-report" style="padding-left:0">
-                            <li class="list-group-item">出题机构：{{ kind_info.sponsor_name }}</li>
-                            <li class="list-group-item">题目总分：{{ kind_info.total_score }}</li>
-                            <li class="list-group-item">题目数量：{{ kind_info.question_num }}</li>
-                            <li class="list-group-item">题库大小：{{ bank_info.total_question_num }}道题</li>
-                            <li class="list-group-item">开始时间：{{ kind_info.cop_startat }}</li>
-                            <li class="list-group-item">结束时间：{{ kind_info.cop_finishat }}</li>
+                            <li class="list-group-item">出题机构：<span id='message_user'></span></li>
+                            <li class="list-group-item">题目类别：<span id='message_type'></span></li>
+                            <li class="list-group-item">题目数量：10</li>
+                            <li class="list-group-item">题库大小：<span id='message_len'></span> 道题</li>
+                            <li class="list-group-item">考试时长：<span id='max_time'></span>分钟</li>
                         </ul>
                     </div>
                     <div class="center-p">
-                        <a id="startAnswer" href="#" class="btn btn-primary" >开始挑战</a>
+                        <button id="startAnswer" class="btn btn-primary" >开始挑战</button>
                         <a href="/bs/rank?uid={{ user_info.uid }}&kind_id={{ kind_info.kind_id }}" class="btn btn-success" >查看排行榜</a>
                     </div>
                 </div>
@@ -673,6 +672,49 @@
       })
   </script>
   </body>
+  <!-- <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.js"></script> -->
+  <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+    
+$(function(){
+    
+    var hr = window.location.href
+    num = hr.split('=')[1]
+    num = 1
+    if (num){
+        $.get('http://127.0.0.1:8000/message/'+ num +'/' , function(dic){
+            var user = $.cookie('username')
+            if(user == undefined){
+                // window.location.href='http://127.0.0.1:5500/templates/web/'
+                user = '游客'
+            }
+            $('#username').html(user)
+            console.log(dic)
+            console.log(dic.up_user)
+            $('#message_user').html(dic.up_user)
+            $('#message_name').html(dic.title)
+            $('#message_type').html(dic.classify)
+            $('#message_len').html(dic.message_key.length)
+            $('#max_time').html(dic.max_time)
+            
+        })}
+    else{
+         window.location.href='http://127.0.0.1:5500/templates/web/'
+    }
+    $('#startAnswer').click(function(){
+        window.location.href='http://127.0.0.1:5500/templates/competition/game.html?num='+num
+    })
+    
+})
+
+
+
+
+</script>
+
+
+
+
 </html>
 
 

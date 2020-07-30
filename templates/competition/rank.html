@@ -179,21 +179,14 @@
                     <h1 style="background: url(../static/images/course-h1.jpg) no-repeat center top;">排行榜</h1>
                         <div class="col-md-9">
                              <div class="course-report">
-                                    <table style="margin-top: 15px;" class="table table-hover">
+                                    <table style="margin-top: 15px;" class="table table-hover" id='voice'>
                                     <tr>
                                         <th>排名</th>
                                         <th>昵称</th>
                                         <th>得分</th>
-                                        <th>用时</th>
+                                        <th>时间</th>
                                     </tr>
-                                    {% for r in rank %}
-                                    <tr>
-                                        <td>{% if r.rank %}<b style="color:red">{{ r.rank }}</b>{% else %}暂无{% endif %}</td>
-                                        <td>{% if r.nickname %}{{ r.nickname }}{% else %}暂无{% endif %}</td>
-                                        <td>{% if r.score %}{{ r.score }}{% else %}0{% endif %}</td>
-                                        <td>{% if r.time %}{{ r.time }}{% else %}暂无{% endif %}s</td>
-                                    </tr>
-                                    {% endfor %}
+                                   
                                 </table>
                             </div>
                         </div>
@@ -584,6 +577,29 @@
       })
   </script>
   </body>
+
+<script>
+    $(function(){
+        $.get('http://127.0.0.1:8000/score/', function(dic){
+            // console.log(dic)
+            for(i=0; i<dic.length;i++){
+
+                $('#voice').append(
+                '<tr>'+
+                '<td><b style="color:red">'+ i+1 +'</b></td>'+
+                '<td>'+ dic[i].an_user +'</td>'+
+                '<td>'+ dic[i].grade +'</td>'+
+                '<td>'+ dic[i].add_time +'</td>'+
+                '</tr>'
+            )
+            }
+            
+            
+
+})
+})
+
+</script>
 </html>
 
 
