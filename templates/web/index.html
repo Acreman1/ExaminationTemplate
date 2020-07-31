@@ -18,7 +18,24 @@
         .modal-dialog {
             padding-top : 200px;
         }
-        
+        #signUpform-phone{
+            display: none;
+        }
+        .code {
+            width:120px;
+            height:40px;
+            background-color:#D6E3BC;
+            border:2px solid;
+            text-align:center;
+            font-size:24px;
+            line-height:40px;
+        }
+        #btn-code{
+            position:absolute;
+            left:150px;
+            bottom:33px;
+            color:green;
+        }
     </style>
     <style>  
         .yz{
@@ -124,26 +141,36 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="signUpModalLabel">注册</h4>
+        <h4 class="modal-title" id="signUpModalLabel"><a id='email-a'>邮箱注册</a>|<a id='phone-a'>手机注册</a></h4>
       </div>
       <div class="modal-body">
-        <form>
+        <form id='signUpform'>
             <div class="form-group">
                 <label for="signUpId" >邮箱</label>
-                <input type="text" class="form-control" id="signUpId" placeholder="">
+                <input type="text" class="form-control" id="signUpId" name='username'>
             </div>
             <div class="form-group">
                 <label for="signUpPassword" >密码</label>
-                <input type="password" class="form-control" id="signUpPassword" placeholder="">
+                <input type="password" class="form-control" id="signUpPassword" name='password'>
             </div>
             <div class="form-group">
-                <label for="signUpPasswordAgain" >确认密码</label>
-                <input type="password" class="form-control" id="signUpPasswordAgain" placeholder="#p@ssw0d123">
+                <label for="signUpVcode" >验证码</label>
+                <input type="text" class="form-control" id="signUpVcode" name='code'>
+                <div class="code" id="checkCode"></div><a href="###" id="btn-code">看不清，换一张</a>
+            </div>
+        </form>
+        <form id='signUpform-phone'>
+            <div class="form-group">
+                <label for="signUpId" >手机号</label>
+                <input type="text" class="form-control" id="signUpId" placeholder="" name='username'>
+            </div>
+            <div class="form-group">
+                <label for="signUpPassword" >密码</label>
+                <input type="password" class="form-control" id="signUpPassword" placeholder="" name='password'>
             </div>
             <div class="form-group">
                 <label for="signUpVcode" >验证码</label>
                 <input type="text" class="form-control" id="signUpVcode" placeholder="">
-                <img id="signUpVcodeImg" src="" style="height: 50px;width: 150px;" />
             </div>
         </form>
       </div>
@@ -163,18 +190,10 @@
         <h4 class="modal-title" id="resetPasswordLabel">重置密码</h4>
       </div>
       <div class="modal-body">
-        <form>
+        <form id='resetform'>
             <div class="form-group">
                 <label for="resetId" >邮箱</label>
-                <input type="text" class="form-control" id="resetId" placeholder="hugo.zhang@example.com">
-            </div>
-            <div class="form-group">
-                <label for="resetNewPassword" >新密码</label>
-                <input type="password" class="form-control" id="resetNewPassword" placeholder="p@ssw0rd123">
-            </div>
-            <div class="form-group">
-                <label for="resetNewPasswordAgain">再次输入密码</label>
-                <input type="password" class="form-control" id="resetNewPasswordAgain" placeholder="p@ssw0rd123">
+                <input type="text" class="form-control" id="resetId"  name='email'>
             </div>
             <div class="form-group">
                 <p style="color: red">邮件发送后，请在三十分钟之内登录邮箱确认!</p>
@@ -409,16 +428,91 @@ $(function(){
     $('#signUp').click(function(){
         $('#signUpModal').modal('show');
         $('#signInModalNormal').modal('hide');
+        $('#checkCode').html(getRanNum())
+    })
+    function getRanNum(){
+        var result = [];
+        for(var i=0;i<4;i++){
+            var ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
+            //大写字母'A'的ASCII是65,A~Z的ASCII码就是65 + 0~25;然后调用String.fromCharCode()传入ASCII值返回相应的字符并push进数组里
+            result.push(String.fromCharCode(65+ranNum));
+        }
+        return  result.join('');
+    }
+    $('#btn-code').click(function(){
+        // getRanNum();
+        $('#checkCode').html(getRanNum())
+    })
+    $('#signUpVcode').blur(function(){
+        if ($('#signUpVcode').val()==$('#checkCode').html()){
+            $('#signUpPost').click(function(){
+            $.ajax({
+                type:"POST",
+                url:"http://127.0.0.1:8000/users/",
+                data:$('#signUpform').serialize(),
+                dataType:'json',
+                cache:false,
+                async:true,
+                success:function(){
+                    console.log('注册成功')
+                    console.log($('input[id=signUpId]').val())
+                    window.location.href = 'http://127.0.0.1:5500/templates/web/sign_email.html?email='+$('input[id=signUpId]').val()
+                }
+            })                   
+    })
+        }else{
+            alert('验证码错误')
+        }
     })
     $('#resetPassword').click(function(){
         $('#resetPasswordModal').modal('show');
         $('#signInModalNormal').modal('hide');
     })
+    $('#signIn').click(function () {
+        $('#signUpModal').modal('hide');
+        $('#signInModalNormal').modal('show');
+    });
+    $('#phone-a').click(function(){
+        $('#signUpform').hide();
+        $('#signUpform-phone').show();
+    })
+    $('#email-a').click(function(){
+        $('#signUpform').show();
+        $('#signUpform-phone').hide();
+    })
+
+    $('#resetPost').click(function(){
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/forget/",
+            data:$('#resetform').serialize(),
+            dataType:'json',
+            cache:false,
+            async:true,
+            success:function(e){
+                if (e.status==200){
+                    alert('发送成功，快去登录邮箱重置密码吧');
+                }else{
+                    alert('发送失败')
+                }
+            }
+        })  
+    })
+    
+
+
+
 })
 
 
 </script>
+
     
+   
+
+
+
+
 
 
     <script>

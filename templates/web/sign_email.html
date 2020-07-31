@@ -198,7 +198,7 @@
     <div class="container">
         <div class="row" style="height:800px">
             <div class="span4">
-                <div class="alert alert-success"><b style="font-size: 15px">恭喜您注册成功</b>，还差一步验证您的邮箱 <b style="color: red">{{ email }}</b> 就成功了！点击
+                <div class="alert alert-success"><b style="font-size: 15px">恭喜您注册成功</b>，还差一步验证您的邮箱 <b style="color: red" id='em-btn'>{{ email }}</b> 就成功了！点击
                     <span class="btn btn-info" id="sendMail">发送邮件</span>
                 </div>
             </div>
@@ -217,35 +217,6 @@
             </div>
         </div>
     </div>
-    <script>
-    $('#sendMail').click(function () {
-        $('#sendMailLoading').modal('show');
-        $.ajax({
-           url: '/api/sendmail',
-           type: 'get',
-           data: {
-               'email': '{{ email|safe }}',
-               'sign': '{{ sign|safe }}'
-           },
-           dataType: 'json',
-           success: function (res) {
-               if(res.status === 200) {
-                   $('#sendMailLoading').modal('hide');
-                   alert('发送成功，快去登录邮箱激活账户吧');
-               }
-               else if(res.status === 300005) {
-                   $('#sendMailLoading').modal('hide');
-                   alert('您已经发送过邮件，请稍等再试');
-               }
-               else if(res.status === 300006) {
-                   $('#sendMailLoading').modal('hide');
-                   alert('验证邮件发送失败!');
-               }
-           }
-       })
-    });
-    </script>
-
     <div class="footer">
     <div class="footer-nav">
         <a href="/index">首页</a>|
@@ -258,6 +229,48 @@
     </div>
   </div>
   </div>
+<script>
+    $(function(){
+        var se_email = window.location.href.split('=')[1]
+        $('#em-btn').html(se_email)
+        $('#sendMail').click(function(){
+            $.ajax({
+                type:"POST",
+                url:'http://127.0.0.1:8000/send/',
+                dataType:'json',
+                data:{'email':se_email},
+                cache:false,
+                async:true,
+                success:function(e){
+                    if(e.status == 200) {
+                    
+                    alert('发送成功，快去登录邮箱激活账户吧');
+
+               }else{
+                    alert(e.msg)
+               }
+            }
+            })
+        })
+    })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <script type="text/javascript">
     $(function(){
         var jwt = document.cookie.match('jwt=([^;]*)(;|$)')
