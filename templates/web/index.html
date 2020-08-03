@@ -162,7 +162,7 @@
         <form id='signUpform-phone'>
             <div class="form-group">
                 <label for="signUpId" >手机号</label>
-                <input type="text" class="form-control" id="signUpId" placeholder="" name='username'>
+                <input type="text" class="form-control" id="signUpPhone" placeholder="" name='username'>
             </div>
             <div class="form-group">
                 <label for="signUpPassword" >密码</label>
@@ -170,7 +170,8 @@
             </div>
             <div class="form-group">
                 <label for="signUpVcode" >验证码</label>
-                <input type="text" class="form-control" id="signUpVcode" placeholder="">
+                <input type="button" id="forcode" value="获取验证码" class="btn btn-success">
+                <input type="text" class="form-control" id="signUpVcode" name='code'>
             </div>
         </form>
       </div>
@@ -480,7 +481,7 @@ $(function(){
         $('#signUpform').show();
         $('#signUpform-phone').hide();
     })
-
+    
     $('#resetPost').click(function(){
         $.ajax({
             type:"POST",
@@ -499,7 +500,36 @@ $(function(){
         })  
     })
     
+    // 验证码
+    $('#forcode').click(function(){
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/code/",
+            data:$('#signUpform-phone').serialize(),
+            dataType:'json',
+            cache:false,
+            async:true,
+            success:function(e){
+                alert(e.msg)
+            }
+        })  
+    })
 
+
+    $('#signUpPost').click(function(){
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/phone/",
+            data:$('#signUpform-phone').serialize(),
+            dataType:'json',
+            cache:false,
+            async:true,
+            success:function(){
+                alert('注册成功，返回登录')
+            }
+        })  
+
+    })
 
 
 })
