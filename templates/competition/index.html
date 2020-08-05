@@ -425,6 +425,7 @@
                                     exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                     document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                    document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     location.reload()
                                 }
                             })
@@ -449,6 +450,7 @@
                                 exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                 document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 location.reload()
                             }
                         })
@@ -737,7 +739,6 @@ $(function(){
     
     var hr = window.location.href
     num = hr.split('=')[1]
-    num = 1
     if (num){
         $.get('http://127.0.0.1:8000/message/'+ num +'/' , function(dic){
             var user = $.cookie('user')

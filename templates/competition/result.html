@@ -322,6 +322,7 @@
                                     exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                     document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                    document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     location.reload()
                                 }
                             })
@@ -346,6 +347,7 @@
                                 exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                 document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 location.reload()
                             }
                         })
