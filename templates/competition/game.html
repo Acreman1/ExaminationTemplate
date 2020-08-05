@@ -931,7 +931,7 @@
                     
                     dic.message_key[i].title+'('+ dic.message_key[i].types +')')
                     console.log(dic.message_key[i].types)
-                    if (dic.message_key[i].types == '判断'){
+                    if (dic.message_key[i].types == '判断题'){
                         $('#choiceBox').html(
                             '<div class="radio">'+
                         '<label id="item1Answer">'+
@@ -947,14 +947,14 @@
                         '</div>'
                         )
                     }
-                    if (dic.message_key[i].types == '填空'){
+                    if (dic.message_key[i].types == '填空题'){
                         $('#choiceBox').html(
                         '<div id="fullinBox" class="form-inline" style="text-align:center">'+
                         '<input type="text" class="form-control" id="value" placeholder="请输入答案"  style="width:400px" />'+
                         '<input type="hidden" id="answerPk" />'+
                         '</div>')
                     }
-                    if (dic.message_key[i].types == '选择'){
+                    if (dic.message_key[i].types == '单选题'){
                         // 选项
                         list_a = dic.message_key[i].options.split(',')
                         window.str = ''
@@ -973,7 +973,7 @@
                     }
                 $('#nextQuestion').click(function(){
                     var v = $("input[name='value']:checked").val()
-                    if (dic.message_key[i].types == '填空'){
+                    if (dic.message_key[i].types == '填空题'){
                         v =  $("input[name='value']").val()
                     }
                     dic_list[dic.message_key[i].id+''] = v
@@ -985,7 +985,7 @@
                     }
                     $('#message_title').html(
                     dic.message_key[i].title+'('+ dic.message_key[i].types +')')
-                    if (dic.message_key[i].types == '判断'){
+                    if (dic.message_key[i].types == '判断题'){
                         
                         $('#choiceBox').html(
                         '<div class="radio">'+
@@ -1002,13 +1002,13 @@
                         '</div>'
                         )
                     }
-                    if (dic.message_key[i].types == '填空'){
+                    if (dic.message_key[i].types == '填空题'){
                         $('#choiceBox').html(
                         '<div id="fullinBox" class="form-inline" style="text-align:center">'+
                         '<input type="text" class="form-control" id="answerF" name="value" placeholder="请输入答案"  style="width:400px" />'+
                         '</div>')
                                  }
-                    if (dic.message_key[i].types == '选择'){
+                    if (dic.message_key[i].types == '选择题'){
                         // 选项
                         list_a = dic.message_key[i].options.split(',')
                         window.str = ''
@@ -1035,7 +1035,7 @@
                     }
                     $('#message_title').html(dic.message_key[i].title+'('+ dic.message_key[i].types +')')
                     console.log(dic.message_key[i].types)
-                    if (dic.message_key[i].types == '判断'){
+                    if (dic.message_key[i].types == '判断题'){
                         $('#choiceBox').html(
                         '<div class="radio">'+
                         '<label id="item1Answer">'+
@@ -1051,7 +1051,7 @@
                         '</div>'
                         )
                     }
-                    if (dic.message_key[i].types == '填空'){
+                    if (dic.message_key[i].types == '填空题'){
                         $('#choiceBox').html(
                             
                         '<div id="fullinBox" class="form-inline" style="text-align:center">'+
@@ -1059,7 +1059,7 @@
                         '<input type="hidden" id="answerPk" />'+
                         '</div>')
                     }
-                    if (dic.message_key[i].types == '选择'){
+                    if (dic.message_key[i].types == '单选题'){
                         // 选项
                         list_a = dic.message_key[i].options.split(',')
                         window.str = ''
@@ -1079,7 +1079,7 @@
                 $('#answerSubmit').click(function(){
                     
                 var v = $("input[name='value']:checked").val()
-                    if (dic.message_key[i].types == '填空'){
+                    if (dic.message_key[i].types == '填空题'){
                         v =  $("input[name='value']").val()
                     }
                     dic_list[dic.message_key[i].id+''] = v
