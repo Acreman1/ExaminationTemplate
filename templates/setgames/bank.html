@@ -215,12 +215,8 @@
                 </ul>
               </div>
         </div>
-<<<<<<< HEAD
 
         <form id="uploadFileForm" method="post" action="/bs/set/bank/upbank" enctype="multipart/form-data">
-=======
-        <form id="uploadFileForm" method="post" action="/bs/set/bank/upbank" enctype="multipart/form-data">{% csrf_token %}
->>>>>>> a6b24ca73434b8138845d531a6f1c9fbc2673d31
         <div id="uploadMainRow" class="row" style="margin-top: 120px;">
             <div class="col-md-3">
                 <label>① 下载题库</label>
@@ -230,21 +226,12 @@
             <div class="col-md-3">
                 <label for="choicedValue">② 题库类型</label>
                 <div class="dropdown" style="margin: 0 10px">
-<<<<<<< HEAD
                     <!-- <input type="text" readonly id="choicedValue" class="btn btn-primary dropdown-toggle form-control" data-toggle="dropdown"
                            style="color:white;background-color:#3c97e6"  name="bank_type" value="选择一个题库类型" /> -->
                     <select  id='lei' name="bank_type" class="btn btn-primary dropdown-toggle form-control" data-toggle="dropdown"
                     style="color:white;background-color:#3c97e6"></select>
                     
 
-=======
-                    <input type="text" readonly id="choicedValue" class="btn btn-primary dropdown-toggle form-control" data-toggle="dropdown"
-                           style="color:white;background-color:#3c97e6"  name="bank_type" value="选择一个题库类型" />
-                    <div class="dropdown-menu">
-                        <div class="btn btn-primary form-control" onclick="choiceBankType(this)">
-                            
-                        </div>
->>>>>>> a6b24ca73434b8138845d531a6f1c9fbc2673d31
                     </div>
                     
                 </div>
@@ -263,36 +250,9 @@
         </div>
         
         </form>
-<<<<<<< HEAD
 
 
         </div>
-=======
-        <script src="../../static/js/csrf.js"></script>
-        <script type="text/javascript">
-            var choicedBankType;
-            var responseTypes = {{ bank_types|safe }};
-            var choiceBankType = function (t) {
-                var cbt = $(t).html();
-                for(var i in responseTypes){
-                    if(responseTypes[i].name === cbt){
-                        choicedBankType = responseTypes[i].id;
-                        break;
-                    }
-                }
-                $('#choicedValue').val(cbt);
-            }
-    
-        </script>
-        <!-- <div class="span4">
-                <div class="alert alert-success">
-                    <strong>创建成功!</strong><br />
-                    <p>本次创建{{ created.choice_num }}道选择题和{{ created.fillinblank_num }}道填空题</p><br />
-                    <a href="/bs/set{% if request.session.uid %}?uid={{ request.session.uid }}{% else %}{% endif %}"><strong>点我</strong></a>继续创建
-                </div>
-            </div>
-        </div> -->
->>>>>>> a6b24ca73434b8138845d531a6f1c9fbc2673d31
     </div>
 
     <div class="footer">
