@@ -220,7 +220,7 @@
         <div id="uploadMainRow" class="row" style="margin-top: 120px;">
             <div class="col-md-3">
                 <label>① 下载题库</label>
-                <p style="color: gray;margin-top: 5px;"><a id="tDownload" href="http://127.0.0.1:8000/media/Django初级题库 _q6Czwr3.xlsx" class="btn btn-success btn-sm">下载</a>&nbsp简易模板，按照模板中的要求修改题库。</p>
+                <p style="color: gray;margin-top: 5px;"><a id="tDownload" href="http://127.0.0.1:8000/media/files/考试系统题库.xlsx" class="btn btn-success btn-sm">下载</a>&nbsp简易模板，按照模板中的要求修改题库。</p>
             </div>
            
             <div class="col-md-3">
@@ -629,11 +629,11 @@
   </body>
 <script>
     $(function(){
-        $.get('http://127.0.0.1:8000/class/',function(dic){
+        $.get('http://127.0.0.1:8000/message/',function(dic){
             console.log(dic)
             for(var i=0;i<dic.length; i++){
                 $('#lei').append(
-                    '<option class="btn btn-primary form-control" value='+ dic[i].id +'>'+ dic[i].name +'</div>'
+                    '<option class="btn btn-primary form-control" value='+ dic[i].id +'>'+ dic[i].title +'</div>'
                 ) 
                 
             }
@@ -652,6 +652,8 @@
             form.append('answer', '1')
             form.append('options', '1')
             console.log(form)
+            $('#startUpload').css({"display":"none"})
+            alert('上传中~~~~~~~~~')
             $.ajax({
                 url:'http://127.0.0.1:8000/topic/',
                 type:'POST',
@@ -660,10 +662,12 @@
                 contentType : false, // 不要设置Content-Type请求头
                 success:function(){
                     alert('上传成功了')
+                    $('#startUpload').css({"display":"block"})
                 },
                 error:function(err){
                     alert('失败了')
                     console.log(err)
+                    $('#startUpload').css({"display":"block"})
                 }
             })
         })
