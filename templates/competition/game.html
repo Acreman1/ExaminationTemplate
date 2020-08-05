@@ -1083,8 +1083,10 @@
                         v =  $("input[name='value']").val()
                     }
                     dic_list[dic.message_key[i].id+''] = v
+                    // console.log(dic.message_key[0].id)
                     for (key in dic_list){
-                        for(var m=0;m<dic_list.length-1;m++){
+                        for(var m=0;m<dic_list.length-2;m++){
+                            console.log(dic_list)
                             if (dic.message_key[m].id+'' == key){
                                 if(dic.message_key[m].answer == dic_list[key]){
                                     grade+=dic.message_key[m].grade

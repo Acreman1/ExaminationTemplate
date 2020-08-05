@@ -219,7 +219,7 @@
                     </div>
                     <div class="center-p">
                         <button id="startAnswer" class="btn btn-primary" >开始挑战</button>
-                        <a href="/bs/rank?uid={{ user_info.uid }}&kind_id={{ kind_info.kind_id }}" class="btn btn-success" >查看排行榜</a>
+                        <a href="http://127.0.0.1:5500/templates/competition/rank.html" class="btn btn-success" >查看排行榜</a>
                     </div>
                 </div>
             </div>
@@ -741,8 +741,12 @@ $(function(){
     if (num){
         $.get('http://127.0.0.1:8000/message/'+ num +'/' , function(dic){
             var user = $.cookie('user')
+            var token = $.cookie('jwt')
+            if (token){
+
+            
             if(user == undefined){
-                // window.location.href='http://127.0.0.1:5500/templates/web/'
+                
                 user = '游客'
             }
             $('#username').html(user)
@@ -754,6 +758,8 @@ $(function(){
             $('#message_len').html(dic.message_key.length)
             $('#max_time').html(dic.max_time)
             
+        }else{
+            window.location.href='http://127.0.0.1:5500/templates/web/'}
         })}
     else{
          window.location.href='http://127.0.0.1:5500/templates/web/'

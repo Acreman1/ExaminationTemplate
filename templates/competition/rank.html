@@ -219,7 +219,7 @@
                             </div>
                         </div>
                         <div class="col-md-3" style="margin-top: 20px;padding-left: 20px;">
-                            <div class="panel panel-success">
+                            <div class="panel panel-success" id='bc'>
                                 <div class="panel-heading panel-danger" style="text-align:center">历史最佳排名</div>
                                 <div class="panel-body" id="myRank">
                                     <div id="myResult">
@@ -639,9 +639,16 @@
 <script>
     $(function(){
         var hr = window.location.href
-        var grade = 0
-        garde = hr.split('=')[1]
-        $('#fen').html(garde)
+        var garde = hr.split('=')[1]
+        console.log(garde)
+        if(garde){
+            $('#fen').html(garde)
+        }else(
+            $('#bc').css({
+                'display':'None'
+            })
+        )
+        
         $.get('http://127.0.0.1:8000/score/', function(dic){
             // console.log(dic)
             for(i=0; i<dic.length;i++){
