@@ -204,30 +204,9 @@
         <div class="inner-content">
             <div class="xxzxBox">
                 <div class="tab-content bd">
-                    <div role="tabpanel" class="active tab-pane">
+                    <div role="tabpanel" class="active tab-pane" id="tab">
                         <ul class="ul_zxlist" id="column_ul">
-                            {% if not kinds %}
-                                <div style="text-align:center">
-                                    <img src="/static/images/no-bs.png">
-                                </div>
-                            {% else %}
-                                {% for  kind in kinds%}
-                                <li style="border: 1px solid #ccc;border-radius: 10px;margin:10px;">
-                                    <a href="{% url 'bs:index' %}?uid={{ request.session.uid }}&kind_id={{kind.kind_id}}">
-                                        <span class="start_time"><b>{{ kind.created_at|date:"Y-m" }}</b><i>{{ kind.created_at|date:"d" }}</i></span>
-                                        <h1 title="{{ kind.kind_name }}">
-                                             {{ kind.kind_name }}
-                                        </h1>
-                                        <p>赞助商：{{ kind.sponsor_name }}</p>
-                                        <p style="padding:5px 0">结束时间：{{ kind.cop_finishat|date:"Y-m-d" }}</p>
-                                        <div class="badge" style="float:right;margin-top: -40px;">
-                                            <small style="color:yellow;">热度:</small>
-                                            <small style="color:yellow">&nbsp;{{ kind.total_partin_num }}</small>
-                                        </div>
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            {% endif %}
+
                         </ul>
                     </div>
                 </div>
@@ -341,8 +320,37 @@
             $('#signInModalNormal').modal('hide');
         })
     })
-    
-    
+    var cid = window.location.search.split('=')[1]
+    $.ajax({
+        type:"GET",
+            url:"http://127.0.0.1:8000/message/",
+            data:'',
+            dataType:"json",
+            cache:false,
+            async:true,
+            success:function(e){
+                    for(var f=0; f<e.length; f++){
+                    if(e[f].classify==cid){
+                        $('#column_ul').append(
+                            '<li style="border: 1px solid #ccc;border-radius: 10px;margin:10px;">'+
+                                    '<a href="http://127.0.0.1:5500/templates/competition/game.html?id='+ e[f].id +'">'+
+                                        '<span class="start_time"><b>'+e[f].title+'</b><i>'+e[f].title+'</i></span>'+
+                                        '<h1 title="{{ kind.kind_name }}">'
+                                             +e[f].title+
+                                        '</h1>'+
+                                        '<p>赞助商：'+e[f].up_user+'</p>'+
+                                        '<p style="padding:5px 0">时长：'+e[f].max_time+'</p>'+
+                                        '<div class="badge" style="float:right;margin-top: -40px;">'+
+                                            // '<small style="color:yellow;">热度:</small>'+
+                                            // '<small style="color:yellow">&nbsp;{{ kind.total_partin_num }}</small>'+
+                                        '</div>'+
+                                    '</a>'+
+                                '</li>'
+                        )
+                    }
+                }
+            }
+    })
     </script>
     <script>
       $.ajaxSetup({

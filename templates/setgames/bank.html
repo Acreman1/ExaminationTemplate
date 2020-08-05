@@ -217,7 +217,6 @@
                 </ul>
               </div>
         </div>
-        {% if not created %}
         <form id="uploadFileForm" method="post" action="/bs/set/bank/upbank" enctype="multipart/form-data">{% csrf_token %}
         <div id="uploadMainRow" class="row" style="margin-top: 120px;">
             <div class="col-md-3">
@@ -236,9 +235,9 @@
                     <input type="text" readonly id="choicedValue" class="btn btn-primary dropdown-toggle form-control" data-toggle="dropdown"
                            style="color:white;background-color:#3c97e6"  name="bank_type" value="选择一个题库类型" />
                     <div class="dropdown-menu">
-                        {% for t in bank_types %}
-                            <div class="btn btn-primary form-control" onclick="choiceBankType(this)">{{ t.name }}</div>
-                        {% endfor %}
+                        <div class="btn btn-primary form-control" onclick="choiceBankType(this)">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -270,16 +269,14 @@
             }
     
         </script>
-        {% else %}
-        <div class="span4">
+        <!-- <div class="span4">
                 <div class="alert alert-success">
                     <strong>创建成功!</strong><br />
                     <p>本次创建{{ created.choice_num }}道选择题和{{ created.fillinblank_num }}道填空题</p><br />
                     <a href="/bs/set{% if request.session.uid %}?uid={{ request.session.uid }}{% else %}{% endif %}"><strong>点我</strong></a>继续创建
                 </div>
             </div>
-        {% endif %}
-        </div>
+        </div> -->
     </div>
 
     <div class="footer">

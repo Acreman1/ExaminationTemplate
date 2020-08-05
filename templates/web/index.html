@@ -116,7 +116,7 @@
             </div>
             <div class="form-group">
                 <label for="signInVcode" >验证码</label><br>
-                <input type="text" class="form-control" id="signUpVcode" style="width: 150px;display: inline-block;" placeholder="">
+                <input type="text" class="form-control" id="signUpVcode1" style="width: 150px;display: inline-block;" placeholder="">
                 <div class="yz">
                     <div class="yz_code"></div>
                     <b class="btn"></b>
@@ -254,76 +254,10 @@
 <div class="container admin-4">
     <h2 class="titleh2 clearfix" style="padding-top: 10px">
         <img src="/static/images/icon4.png">
-        <span style="cursor: pointer;">比赛分类</span>
+        <span style="cursor: pointer;" id='cursor'>比赛分类</span>
     </h2>
-    <div class="row" style="padding: 20px ">
-    <div class="col-md-3 cate" >
-        <li class="layout-gray student" style="cursor: default;">
-            <a href="/bs/games/s/hot">
-                <img src="/static/images/layout-icon3.png" class="bc">
-                <p>了解自己 科学规划 激发潜能</p>
-                <div class="button-div">
-                    热门比赛
-                </div>
-            </a>
-        </li>
-    </div>
-    <div class="col-md-3 cate">
-        <li class="layout-red admin" style="cursor: default;">
-            <a href="/bs/games/s/tech">
-                <img src="/static/images/layout-icon1.png" class="bc">
-                <p>优化理念 紧跟技术发展趋势</p>
-                <div class="button-div">技术类</div>
-            </a>
-        </li>
-    </div>
-    <div class="col-md-3 cate">
-        <li class="layout-green teacher" style="cursor: default;">
-            <a href="/bs/games/s/edu">
-                <img src="/static/images/layout-icon2.png" class="bc">
-                <p>提升生涯引领水平 掌握实操技能</p>
-                <div class="button-div" >教育类</div>
-            </a>
-        </li>
-    </div>
-    <div class="col-md-3 cate">
-        <li class="layout-blue parent" style="margin-right: 26px;cursor: default;">
-            <a href="/bs/games/s/culture">
-                <img src="/static/images/layout-icon4.png" class="bc">
-                <p>掌握动态 增长知识 助力规划未来</p>
-                <div class="button-div" >文化类</div>
-            </a>
-        </li>
-    </div>
-    <div class="col-md-3 cate">
-        <li class="layout-red admin" style="margin-right: 0;cursor: default;">
-            <a href="/bs/games/s/sport">
-                <img src="/static/images/layout-icon1.png" class="bc">
-                <p>优化理念 大数据预测发展趋势</p>
-                <div class="button-div">体育类</div>
-            </a>
-        </li>
-    </div>
-    <div class="col-md-3 cate">
-        <li class="layout-blue parent" style="margin-right: 26px;cursor: default;">
-            <a href="/bs/games/s/general">
-                <img src="/static/images/layout-icon4.png" class="bc">
-                <p>掌握动态 增长知识 助力规划未来</p>
-                <div class="button-div">常识类</div>
-            </a>
-        </li>
-    </div>
-    <div class="col-md-3 cate" >
-        <li class="layout-gray student" style="cursor: default;">
-            <a href="/bs/games/s/interview">
-                <img src="/static/images/layout-icon3.png" class="bc">
-                <p>了解自己 科学规划 激发潜能</p>
-                <div class="button-div">
-                    面试题
-                </div>
-            </a>
-        </li>
-    </div>
+    <div class="row" style="padding: 20px " id='row'>
+    
     </div>
 </div>
 <!--end main-->
@@ -383,7 +317,7 @@ $(function(){
             $('#log').click(function(){
                 $('#signInModalNormal').modal('show');
                 $('#signInPost').click(function(){
-                    if ($('#signUpVcode').val() == res){
+                    if ($('#signUpVcode1').val() == res){
                         $.ajax({
                             type:'post',
                             url:'http://127.0.0.1:8000/login/',
@@ -407,7 +341,7 @@ $(function(){
         $('#log').click(function(){
             $('#signInModalNormal').modal('show');
             $('#signInPost').click(function(){
-                if ($('#signUpVcode').val() == res){
+                if ($('#signUpVcode1').val() == res){
                     $.ajax({
                         type:'post',
                         url:'http://127.0.0.1:8000/login/',
@@ -530,10 +464,37 @@ $(function(){
         })  
 
     })
-
-
-})
-
+    $('#signIn').click(function () {
+        $('#signUpModal').modal('hide');
+        $('#signInModalNormal').modal('show');
+    });
+        $.ajax({
+            type:"GET",
+            url:"http://127.0.0.1:8000/class/",
+            data:'',
+            dataType:"json",
+            cache:false,
+            async:true,
+            success:function(e){
+                console.log(e);
+                for(var f=0; f<e.length; f++){
+                            var option = e[f].name
+                            console.log(option)
+                            $('#row').append('<div class="col-md-3 cate" id="col-md-3">'+
+        '<li class="layout-gray student" style="cursor: default;">'+
+            '<a href="http://127.0.0.1:5500/templates/competition/games.html?id='+e[f].id+'">'+
+                '<img src="/static/images/layout-icon3.png" class="bc">'+
+                '<p>了解自己 科学规划 激发潜能</p>'+
+                '<div class="button-div" id=button>'
+                    +option+
+                '</div>'+
+            '</a>'+
+        '</li>'+
+    '</div>') 
+                };    
+            }
+        })
+    })
 
 </script>
 
