@@ -737,7 +737,6 @@ $(function(){
     
     var hr = window.location.href
     num = hr.split('=')[1]
-    num = 1
     if (num){
         $.get('http://127.0.0.1:8000/message/'+ num +'/' , function(dic){
             var user = $.cookie('user')
