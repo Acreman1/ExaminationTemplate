@@ -279,7 +279,6 @@
 $(function(){
     var jwt = document.cookie.match('jwt=([^;]*)(;|$)')
     var user = document.cookie.match('user=([^;]*)(;|$)')
-
     var type1 = false;
         function rnd(start,end){
                 return Math.floor(Math.random()*(end-start+1))+start;
@@ -329,6 +328,7 @@ $(function(){
                                 exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                 document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 location.reload()
                             }
                         })
@@ -353,6 +353,7 @@ $(function(){
                             exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                             document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                             document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                            document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                             location.reload()
                         }
                     })

@@ -280,6 +280,7 @@
                                     exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                     document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                    document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     location.reload()
                                 }
                             })
@@ -304,6 +305,7 @@
                                 exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                 document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 location.reload()
                             }
                         })
@@ -330,7 +332,7 @@
             async:true,
             success:function(e){
                     for(var f=0; f<e.length; f++){
-                    if(e[f].classify==cid){
+                    if(e[f].classify1==cid){
                         $('#column_ul').append(
                             '<li style="border: 1px solid #ccc;border-radius: 10px;margin:10px;">'+
                                     '<a href="http://127.0.0.1:5500/templates/competition/index.html?id='+ e[f].id +'">'+

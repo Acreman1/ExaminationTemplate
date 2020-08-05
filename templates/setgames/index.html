@@ -200,12 +200,12 @@
             <div class="jumbotron" >
                 <h1 style="color: orange; font-size: 40px; margin-left: 20px;">录制题库</h1><br />
                 <p style="font-size: 18px; margin-left: 20px;">您可以通过下载我们的电子模板，对其进行简单的编辑，然后再将您的模板上传到我们的服务器，就可以录制一套您自己的题库啦~</p><br />
-                <p><a class="btn btn-primary btn-lg" href="/bs/set/bank?uid={{ request.session.uid }}" role="button" style="margin-left: 20px;">开始录制</a></p>
+                <p><a class="btn btn-primary btn-lg" href="../setgames/bank.html" role="button" style="margin-left: 20px;">开始录制</a></p>
             </div>
             <div class="jumbotron">
                 <h1 style="color: orange; font-size: 40px; margin-left: 20px;">配置比赛</h1><br />
                 <p style="font-size: 18px; margin-left: 20px;">您可以使用自己上传的或者他人上传的题库来创建您自己的比赛或者面试。只需要简单的几步，让别人也来参与您创建的活动~</p><br />
-                <p><a id="configGame" class="btn btn-primary btn-lg" href="/bs/set/game?uid={{ request.session.uid }}" role="button" style="margin-left: 20px;">开始配置</a></p>
+                <p><a id="configGame" class="btn btn-primary btn-lg" href="../setgames/game.html" role="button" style="margin-left: 20px;">开始配置</a></p>
             </div>
         </div>
     </div>
@@ -276,6 +276,7 @@
                                     exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                     document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                    document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                     location.reload()
                                 }
                             })
@@ -300,6 +301,7 @@
                                 exp.setTime(exp.getTime() + 60 * 30000);//过期时间 30分钟
                                 document.cookie = 'jwt=' + escape(data['token']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 document.cookie = 'user=' + escape(data.user['username']) + ";expires=" + exp.toGMTString() + ";path=/";
+                                document.cookie = 'id=' + escape(data.user['id']) + ";expires=" + exp.toGMTString() + ";path=/";
                                 location.reload()
                             }
                         })
